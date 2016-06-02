@@ -30,8 +30,9 @@ build:
 	-t $(REPOSITORY)/$(NAME):latest .; \
 	fi
 	
+deploy: DOCKER_USER=$(shell echo $$DOCKER_USER) DOCKER_PASSWORD:=$(shell echo $$DOCKER_PASSWORD)
 deploy: build
-	$(call check_defined, DOCKER_USER, DOCKER_PASSWORD, docker repository login)
-	docker login -u$(DOCKER_USER) -p$(DOCKER_PASSWORD); \
-	docker push $(REPOSITORY)/$(NAME):$(VERSION); \
+	$(call check_defined, DOCKER_USER DOCKER_PASSWORD, docker repository login)
+	docker login -u $(DOCKER_USER) -p $(DOCKER_PASSWORD) && \
+	docker push $(REPOSITORY)/$(NAME):$(VERSION) && \
 	docker push $(REPOSITORY)/$(NAME):latest
