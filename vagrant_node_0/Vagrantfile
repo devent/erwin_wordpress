@@ -1,0 +1,76 @@
+#!/bin/ruby
+
+# network proxy
+httpProxy = ENV['http_proxy']
+httpProxy ||= ''
+httpsProxy = ENV['https_proxy']
+httpsProxy ||= ''
+ftpProxy = ENV['ftp_proxy']
+ftpProxy ||= ''
+noProxy = ENV['no_proxy']
+noProxy ||= ''
+
+# node private network
+nodePrivateNetwork = ENV['vagrant_private_network']
+
+Vagrant.configure(2) do |config|
+
+  # distribution
+  config.vm.box = "debian/jessie64"
+
+  # hostname
+  config.vm.hostname = "node0.muellerpublic.com"
+
+  config.vm.network "private_network", ip: nodePrivateNetwork
+
+  config.vm.synced_folder "..", "/vagrant", type: "virtualbox"
+
+  config.vm.provider "virtualbox" do |vb|
+     vb.memory = "512"
+     vb.name = "Node-0-Muellerpublic"
+  end
+
+  config.vm.provision "fix-no-tty", type: "shell" do |s|
+    s.privileged = false
+    s.inline = "sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
+    s.inline = "sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /home/vagrant/.profile"
+  end
+
+  if Vagrant.has_plugin?("vagrant-proxyconf")
+    config.proxy.http     = httpProxy
+    config.proxy.https    = httpsProxy
+    config.proxy.no_proxy = noProxy
+  end
+
+  config.vm.provision "shell", name: "setup-server", privileged: true, args: [httpProxy, httpsProxy, ftpProxy, noProxy], inline: <<-SHELL
+    export http_proxy="$1"
+    export https_proxy="$2"
+    export ftp_proxy="$3"
+    export no_proxy="$4"
+    aptitude update
+    aptitude -y upgrade
+    aptitude install -y apt-transport-https ca-certificates wget unzip screen emacs-nox htop ntp
+    timedatectl set-timezone Europe/Berlin
+  SHELL
+
+  config.vm.provision "shell", name: "install-tools", privileged: false, args: [httpProxy, httpsProxy, ftpProxy, noProxy], inline: <<-SHELL
+    export http_proxy="$1"
+    export https_proxy="$2"
+    export ftp_proxy="$3"
+    export no_proxy="$4"
+    cd /tmp
+    wget https://github.com/devent/zsh-setup/archive/master.zip -O zsh-setup.zip
+    unzip zsh-setup.zip
+    cd zsh-setup-master
+    make
+  SHELL
+  
+  config.vm.provision "shell", name: "install-docker", privileged: true, inline: <<-SHELL
+    echo 'deb https://apt.dockerproject.org/repo debian-jessie main' > /etc/apt/sources.list.d/docker.list
+    apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+    aptitude update
+    aptitude install -y docker-engine
+    usermod -aG docker vagrant
+  SHELL
+  
+end
