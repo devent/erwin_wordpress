@@ -2,6 +2,8 @@ VERSION := 0.5.0-rc1
 CONVOY := /usr/local/bin/convoy /usr/local/bin/convoy-pdata_tools
 CONVOY_SPEC := /etc/docker/plugins/convoy.spec
 SERVICE := /etc/systemd/system/convoy.service
+DATA_VOL := /volumes/data.vol
+METADATA_VOL := /volumes/metadata.vol
 .PHONY: install clean
 
 install: $(CONVOY) $(SERVICE) enable start
@@ -16,7 +18,9 @@ clean:
 enable: $(SERVICE)
 	sudo systemctl enable convoy.service
 	
-start:
+start: $(DATA_VOL) $(METADATA_VOL)
+	sudo losetup /dev/loop5 $(DATA_VOL)
+	sudo losetup /dev/loop6 $(METADATA_VOL)
 	sudo systemctl start convoy.service
 	sudo systemctl status convoy.service
 	
@@ -34,3 +38,11 @@ $(CONVOY):
 $(SERVICE):
 	sudo cp convoy.service $(SERVICE)
 	sudo systemctl daemon-reload
+
+$(DATA_VOL):
+	sudo mkdir -p /volumes
+	sudo truncate -s 4G /volumes/data.vol
+
+$(METADATA_VOL):
+	sudo mkdir -p /volumes
+	sudo truncate -s 256M /volumes/metadata.vol

@@ -13,7 +13,8 @@ docker run \
 erwinnttdata/maradns:$(VERSION)
 endef
 
-include ../make_container/Makefile
+include ../make_utils/Makefile.functions
+include ../make_utils/Makefile.container
 
 .PHONY +: run rerun rm clean test restart
 

@@ -74,19 +74,4 @@ Vagrant.configure(2) do |config|
     usermod -aG docker vagrant
   SHELL
   
-  config.vm.provision "shell", name: "setup-volumes", privileged: true, inline: <<-SHELL
-    mkdir -p /vagrant/root/volumes
-    cd /vagrant/root/volumes
-    if [ ! -f /vagrant/root/volumes/data.vol ]; then
-      truncate -s 2G data.vol
-      truncate -s 128M metadata.vol
-    fi
-    if [ -f /vagrant/root/volumes/data.vol ]; then
-      losetup /dev/loop5 data.vol
-      losetup /dev/loop6 metadata.vol
-      mkdir -p /media/data.vol
-      mkdir -p /media/metadata.vol
-    fi
-  SHELL
-  
 end

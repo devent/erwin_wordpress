@@ -1,41 +1,43 @@
-VERSION := 5.7
+VERSION := latest
 NAME := db
-WORK := ../root/var/lib/mysql
-CONFIG_FILE := my.conf
-CONFIG := conf.d
+CONFIG := conf
 ROOT_PASSWORD := auHoh5fei4biSooyobae1ahp8Xi1iaGo
+VOL_NAME := vol1
+MOUNT_PATH := var/lib/mysql
+IMAGE_NAME := erwinnttdata/mysql-name-resolve:$(VERSION)
 
 define DOCKER_CMD :=
-mkdir -p $(WORK); \
-WORK_DIR=`realpath $(WORK)`; \
-CONFIG_FILE_DIR=`realpath $(CONFIG_FILE)`; \
 CONFIG_DIR=`realpath $(CONFIG)`; \
 docker run \
 --name $(NAME) \
 --dns=172.17.0.1 \
--v "$$WORK_DIR:/var/lib/mysql" \
--v "$$CONFIG_FILE_DIR:/etc/mysql/my.cnf" \
+--volumes-from $(subst /,_,$(MOUNT_PATH)) \
 -v "$$CONFIG_DIR:/etc/mysql/conf.d" \
 -e MYSQL_ROOT_PASSWORD="$(ROOT_PASSWORD)" \
 -d \
-mysql:$(VERSION)
+$(IMAGE_NAME)
 endef
 
-include ../make_container/Makefile
+include ../make_utils/Makefile.functions
+include ../make_utils/Makefile.container
 
-.PHONY +: configFiles run rerun rm clean test restart user drop dropdb dropuser
+.PHONY +: run rerun rm clean test restart dataContainer rm_dataContainer user drop dropdb dropuser
 
-run: _run
+run: dataContainer _run
 
 rerun: _rerun
 
 rm: _rm
 
-clean: _clean
+clean: _clean rm_dataContainer
 
 test: _test
 	
 restart: _restart
+
+dataContainer: _dataContainer
+
+rm_dataContainer: _rm_dataContainer
 
 user: test
 	$(call check_defined, DB_USER DB_PASSWORD DB_HOST, Database user credentials and host)
