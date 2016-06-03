@@ -26,8 +26,9 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder "..", "/vagrant", type: "virtualbox"
 
   config.vm.provider "virtualbox" do |vb|
-     vb.memory = "512"
      vb.name = "Node-0-Muellerpublic"
+     vb.memory = "512"
+     vb.cpus = 2
   end
 
   config.vm.provision "fix-no-tty", type: "shell" do |s|
@@ -71,6 +72,21 @@ Vagrant.configure(2) do |config|
     aptitude update
     aptitude install -y docker-engine
     usermod -aG docker vagrant
+  SHELL
+  
+  config.vm.provision "shell", name: "setup-volumes", privileged: true, inline: <<-SHELL
+    mkdir -p /vagrant/root/volumes
+    cd /vagrant/root/volumes
+    if [ ! -f /vagrant/root/volumes/data.vol ]; then
+      truncate -s 2G data.vol
+      truncate -s 128M metadata.vol
+    fi
+    if [ -f /vagrant/root/volumes/data.vol ]; then
+      losetup /dev/loop5 data.vol
+      losetup /dev/loop6 metadata.vol
+      mkdir -p /media/data.vol
+      mkdir -p /media/metadata.vol
+    fi
   SHELL
   
 end

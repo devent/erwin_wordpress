@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-NODE_PRIVATE_NETWORK := 192.168.33.10
+NODE_PRIVATE_NETWORK ?= 192.168.33.10
 .PHONY: up provision destroy
 
 up:
