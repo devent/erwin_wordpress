@@ -1,6 +1,6 @@
 REPOSITORY := erwinnttdata
 NAME := mysql-name-resolve
-VERSION ?= 5.7-b003
+VERSION ?= 5.7-b006
 
 include ../make_utils/Makefile.functions
 include ../make_utils/Makefile.image
