@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 WEAVE := /usr/local/bin/weave
-.PHONY: run rerun rm clean test restart
+.PHONY: _run _rerun _rm _clean _test _restart
 
 # Check that given variables are set and all have non-empty values,
 # die with an error otherwise.
@@ -21,24 +21,24 @@ $(call check_defined, VERSION, image version)
 $(call check_defined, NAME, image name)
 $(call check_defined, DOCKER_CMD, docker run command)
       
-run: $(WEAVE)
+_run: $(WEAVE)
 	eval "$$(weave env)"; \
 	$(DOCKER_CMD)
 
-rerun: rm run
+_rerun: rm run
 
-rm:
+_rm:
 	if [ -n "`docker ps -a | grep $(NAME)`" ]; then \
 	eval "$$(weave env)"; \
 	docker rm -f $(NAME); \
 	fi
 
-clean: rm
+_clean: rm
 
-test:
+_test:
 	[ -n "`docker ps -a | grep $(NAME)`" ]
 	
-restart: $(WEAVE) test
+_restart: $(WEAVE) test
 	eval "$$(weave env)"; \
 	docker restart $(NAME)
 

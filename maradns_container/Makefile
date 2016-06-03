@@ -1,5 +1,3 @@
-REPOSITORY := erwinnttdata
-IMAGE_NAME := maradns
 VERSION := latest
 NAME := maradns
 CONF := ../root/etc/maradns
@@ -12,16 +10,24 @@ docker run \
 -v "`realpath $(CONF)`:/etc/maradns" \
 -p 8053:172.17.0.2:53 \
 -d \
-$(REPOSITORY)/$(NAME):$(VERSION)
+erwinnttdata/maradns:$(VERSION)
 endef
 
 include ../make_container/Makefile
 
-.PHONY +: clean reload config
+.PHONY +: run rerun rm clean test restart
 
-run: $(WEAVE) $(CONF)
-	eval "$$(weave env)"; \
-	$(DOCKER_CMD)
+run: $(CONF) _run
+
+rerun: _rerun
+
+rm: _rm
+
+clean: _clean
+
+test: _test
+	
+restart: _restart
 
 $(CONF):
 	mkdir -p "$(CONF)"
