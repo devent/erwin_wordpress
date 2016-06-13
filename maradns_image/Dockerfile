@@ -115,6 +115,25 @@ VOLUME /var/cache/deadwood
 # expose dns
 EXPOSE 53/udp 53/tcp
 
+# use filebeat to log maradns
+# install filebeat
+RUN set -x \
+    && apt-get update \
+    && apt-get install -y \
+                        curl apt-transport-https ca-certificates \
+    && curl https://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add - \
+    && echo "deb https://packages.elastic.co/beats/apt stable main" > /etc/apt/sources.list.d/beats.list \
+    && apt-get update && apt-get install filebeat \
+    && apt-get remove --auto-remove -y curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# add filebeat supervisord configuration
+ADD filebeat.sv.conf /etc/supervisor/conf.d/
+
+# add filebeat configuration
+ADD filebeat.yml /etc/filebeat/filebeat.yml.custom
+ADD filebeat.yml /etc/filebeat/filebeat.yml
+
 # add entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN set -x \

@@ -21,5 +21,8 @@ cp /etc/dwood3rc.custom /etc/dwood3rc
 sed -i -r "s/(maradns_uid\s*=\s*)([0-9]+)(.*)/\1${MARADNS_UID}\3/" /etc/dwood3rc
 sed -i -r "s/(maradns_gid\s*=\s*)([0-9]+)(.*)/\1${MARADNS_GID}\3/" /etc/dwood3rc
 
+# copy filebeat configuration
+cp /etc/filebeat/filebeat.yml.custom /etc/filebeat/filebeat.yml
+
 # run supervisord
 exec supervisord -c /etc/supervisor.conf

@@ -3,11 +3,12 @@ chroot_dir = "/etc/maradns"
 maradns_uid = 99 # UID Maradns runs as
 maradns_gid = 99 # GID Maradns runs as
 
-no_fingerprint = 0
+hide_disclaimer = "YES"
+no_fingerprint = 1
 max_chain = 8
 max_ar_chain = 1
 max_total = 20
-verbose_level = 3
+verbose_level = 0
 
 csv2 = {}
 csv2["muellerpublic.de.test."] = "db.muellerpublic.de.test"

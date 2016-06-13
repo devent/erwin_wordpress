@@ -1,6 +1,6 @@
 REPOSITORY := erwinnttdata
 NAME := deadwood
-VERSION ?= 3.2.09-build_004
+VERSION ?= 3.2.09-build_006
 
 build: _build ##@target Builds the docker image.
 

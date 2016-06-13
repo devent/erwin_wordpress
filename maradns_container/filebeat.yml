@@ -1,0 +1,14 @@
+filebeat:
+    prospectors:
+        -
+            paths:
+                - "/var/log/maradns.log"
+                - "/var/log/deadwood.log"
+                - "/var/log/filebeat.log"
+            input_type: log
+output:
+    elasticsearch:
+        hosts: ["el0.weave.local:9200"]
+
+template:
+    path: "/etc/filebeat/filebeat.template.json"

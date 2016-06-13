@@ -1,6 +1,6 @@
 bind_address = "172.17.0.2"
 chroot_dir = "/var/cache/deadwood"
-verbose_level = 1000
+verbose_level = 0
 
 # Maximum number of pending requests
 maxprocs = 8 

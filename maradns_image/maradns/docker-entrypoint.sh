@@ -22,5 +22,8 @@ HOST_NAME=`hostname -f`
 HOST_ADDRESS=`grep $HOST_NAME /etc/hosts|cut -d " " -f1`
 sed -i -r "s/(ipv4_bind_addresses\s*=\s*)(.*)(.*)/\1\"${HOST_ADDRESS}\"\3/" /etc/mararc
 
+# copy filebeat configuration
+cp /etc/filebeat/filebeat.yml.custom /etc/filebeat/filebeat.yml
+
 # run supervisord
 exec supervisord -c /etc/supervisor.conf

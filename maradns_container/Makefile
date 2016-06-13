@@ -8,11 +8,12 @@ PORT_ON_LOCALHOST ?=
 define DOCKER_CMD :=
 docker run \
 --name $(NAME) \
---dns=172.17.0.1 \
+--dns=172.17.0.2 \
 -v "`realpath mararc`:/etc/mararc.custom" \
 -v "`realpath $(CONF)`:/etc/maradns" \
 -v "`realpath dwood3rc`:/etc/dwood3rc.custom" \
 -v "`realpath $(CACHE)`:/var/cache/deadwood" \
+-v "`realpath filebeat.yml`:/etc/filebeat/filebeat.yml.custom" \
 -e "MARADNS_USER_ID=`id -u maradns`" \
 $(PORT_ON_LOCALHOST) \
 -d \
@@ -25,7 +26,7 @@ include ../make_utils/Makefile.container
 
 .PHONY +: run rerun rm clean test restart
 
-run: $(CONF) _localuser _run ##@default Starts the container. Set the option PORT_ON_LOCALHOST to '-p 127.0.0.1:53:53/udp' to use the DNS server on localhost.
+run: $(CONF) _localuser _run ##@default Starts the container. Set the option PORT_ON_LOCALHOST='-p 127.0.0.1:53:53/udp' to use the DNS server on localhost.
 
 rerun: _rerun ##@target Stops and starts the container.
 

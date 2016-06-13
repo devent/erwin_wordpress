@@ -1,0 +1,10 @@
+filebeat:
+    prospectors:
+        -
+            paths:
+                - "/var/log/maradns.log"
+                - "/var/log/deadwood.log"
+            input_type: log
+    output:
+        logstash:
+            hosts: ["logstash.weave.local:5044"]

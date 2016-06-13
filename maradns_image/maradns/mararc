@@ -14,6 +14,9 @@ chroot_dir = "/etc/maradns"
 maradns_uid = 99 # UID Maradns runs as
 maradns_gid = 99 # GID Maradns runs as
 
+# Hide legal disclaimer
+hide_disclaimer = "YES"
+
 # Normally, MaraDNS has some MaraDNS-specific features, such as DDIP
 # synthesizing, a special DNS query ("erre-con-erre-cigarro.maradns.org." 
 # with a TXT query returns the version of MaraDNS that a server is 
@@ -22,7 +25,7 @@ maradns_gid = 99 # GID Maradns runs as
 # a sys admin disable all these features.  Just give "no_fingerprint" 
 # a value of one here, and MaraDNS should be more or less 
 # indistinguishable from a tinydns server.
-no_fingerprint = 0
+no_fingerprint = 1
 
 # These constants limit the number of records we will display, in order
 # to help keep packets 512 bytes or smaller.  This, combined with round_robin
@@ -44,7 +47,7 @@ max_total = 20
 # 1: Only startup messages logged (default)
 # 2: Error queries logged
 # 3: All queries logged (but not very verbosely right now)
-verbose_level = 1
+verbose_level = 0
 
 # Here is a ACL which restricts who is allowed to perform zone transfer from 
 # the zoneserver program

@@ -1,6 +1,6 @@
 REPOSITORY := erwinnttdata
 NAME := maradns
-VERSION ?= 2.0.13-build_008
+VERSION ?= 2.0.13-build_010
 
 build: _build ##@target Builds the docker image.
 
