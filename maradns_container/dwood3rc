@@ -1,4 +1,4 @@
-bind_address = "0.0.0.0"
+bind_address = "172.17.0.2"
 chroot_dir = "/var/cache/deadwood"
 verbose_level = 1000
 
@@ -8,12 +8,13 @@ maxprocs = 8
 # Send SERVER FAIL when overloaded
 handle_overload = 1 
 
-root_servers = {}
-root_servers["."]="172.17.0.1"
+#root_servers = {}
+#root_servers["."]="172.17.0.1"
 
 # add here authorative entries
-#upstream_servers = {}
-#upstream_servers["."]="172.17.0.1"
+upstream_servers = {}
+upstream_servers["."]="172.17.0.1"
+upstream_servers["muellerpublic.de.test."]="127.0.0.2"
 
 # Who is allowed to use the cache.  This line
 # allows anyone with "127.0" as the first two

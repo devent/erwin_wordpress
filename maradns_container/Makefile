@@ -1,6 +1,7 @@
 VERSION := latest
-NAME := maradns
+NAME := maradns-deadwood
 CONF := ../root/etc/maradns
+CACHE := ../root/var/cache/deadwood
 # Set the option PORT_ON_LOCALHOST to '-p 127.0.0.1:53:53/udp' to use the DNS server on localhost.
 PORT_ON_LOCALHOST ?=
 
@@ -10,10 +11,12 @@ docker run \
 --dns=172.17.0.1 \
 -v "`realpath mararc`:/etc/mararc.custom" \
 -v "`realpath $(CONF)`:/etc/maradns" \
+-v "`realpath dwood3rc`:/etc/dwood3rc.custom" \
+-v "`realpath $(CACHE)`:/var/cache/deadwood" \
 -e "MARADNS_USER_ID=`id -u maradns`" \
 $(PORT_ON_LOCALHOST) \
 -d \
-erwinnttdata/maradns:$(VERSION)
+erwinnttdata/maradns-deadwood:$(VERSION)
 endef
 
 include ../make_utils/Makefile.help
@@ -36,3 +39,9 @@ restart: _restart ##@target Restarts the container.
 
 $(CONF):
 	mkdir -p "$(CONF)"
+
+$(CACHE):
+	mkdir -p "$(CACHE)"
+
+cache_permissions:
+	sudo chown -R maradns.maradns $(CACHE)
