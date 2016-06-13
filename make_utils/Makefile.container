@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 WEAVE := /usr/local/bin/weave
 .DEFAULT_GOAL := run
-.PHONY: _run _rerun _rm _clean _test _restart _dataContainer _rm_dataContainer
+.PHONY: _run _rerun _rm _clean _test _restart _localuser _dataContainer _rm_dataContainer
 
 container_run = `docker ps -a | egrep '^.*\s+$(NAME)$$'`
 
@@ -27,6 +27,9 @@ _test:
 _restart: $(WEAVE) test
 	eval "$$(weave env)"; \
 	docker restart $(NAME)
+
+_localuser:
+	sudo useradd -rU maradns; true
 
 $(WEAVE):
 	cd ../weave && $(MAKE)

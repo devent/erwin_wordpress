@@ -1,6 +1,6 @@
 REPOSITORY := erwinnttdata
-NAME := maradns
-VERSION ?= 2.0.13-build_007
+NAME := deadwood
+VERSION ?= 3.2.09-build_003
 
 build: _build ##@target Builds the docker image.
 

@@ -1,11 +1,12 @@
 SHELL := /bin/bash
+.DEFAULT_GOAL := help
 .PHONY: build deploy
 
 $(call check_defined, REPOSITORY, docker image repository)
 $(call check_defined, NAME, docker image name)
 $(call check_defined, VERSION, docker image name)
 
-build:
+_build:
 	if [ -z "`docker images | egrep '$(REPOSITORY)/$(NAME)\s*$(VERSION)'`" ]; then \
 	docker build \
 	--build-arg https_proxy=$$HTTPS_PROXY --build-arg http_proxy=$$HTTP_PROXY \
@@ -16,7 +17,7 @@ build:
 	-t $(REPOSITORY)/$(NAME):latest .; \
 	fi
 	
-deploy: build
+_deploy: build
 	$(call check_defined, DOCKER_USER DOCKER_PASSWORD, docker repository login)
 	docker login -u $(DOCKER_USER) -p $(DOCKER_PASSWORD) && \
 	docker push $(REPOSITORY)/$(NAME):$(VERSION) && \

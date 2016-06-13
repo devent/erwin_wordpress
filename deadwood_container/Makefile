@@ -1,6 +1,6 @@
 VERSION := latest
-NAME := maradns
-CONF := ../root/etc/maradns
+NAME := deadwood
+CACHE := ../root/var/cache/deadwood
 # Set the option PORT_ON_LOCALHOST to '-p 127.0.0.1:53:53/udp' to use the DNS server on localhost.
 PORT_ON_LOCALHOST ?=
 
@@ -8,21 +8,21 @@ define DOCKER_CMD :=
 docker run \
 --name $(NAME) \
 --dns=172.17.0.1 \
--v "`realpath mararc`:/etc/mararc.custom" \
--v "`realpath $(CONF)`:/etc/maradns" \
+-v "`realpath dwood3rc`:/etc/dwood3rc.custom" \
+-v "`realpath $(CACHE)`:/var/cache/deadwood" \
 -e "MARADNS_USER_ID=`id -u maradns`" \
 $(PORT_ON_LOCALHOST) \
 -d \
-erwinnttdata/maradns:$(VERSION)
+erwinnttdata/deadwood:$(VERSION)
 endef
 
 include ../make_utils/Makefile.help
 include ../make_utils/Makefile.functions
 include ../make_utils/Makefile.container
 
-.PHONY +: run rerun rm clean test restart
+.PHONY +: run rerun rm clean test restart cache_permissions
 
-run: $(CONF) _localuser _run ##@default Starts the container. Set the option PORT_ON_LOCALHOST to '-p 127.0.0.1:53:53/udp' to use the DNS server on localhost.
+run: $(CACHE) _localuser cache_permissions _run ##@default Starts the container. Set the option PORT_ON_LOCALHOST='-p 127.0.0.1:53:53/udp' to use the DNS server on localhost.
 
 rerun: _rerun ##@target Stops and starts the container.
 
@@ -34,5 +34,8 @@ test: _test ##@target Tests if the container is running.
 	
 restart: _restart ##@target Restarts the container.
 
-$(CONF):
-	mkdir -p "$(CONF)"
+$(CACHE):
+	mkdir -p "$(CACHE)"
+
+cache_permissions:
+	sudo chown -R maradns.maradns $(CACHE)

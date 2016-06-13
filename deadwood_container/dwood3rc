@@ -1,0 +1,45 @@
+bind_address = "0.0.0.0"
+chroot_dir = "/var/cache/deadwood"
+
+# Maximum number of pending requests
+maxprocs = 8 
+
+# Send SERVER FAIL when overloaded
+handle_overload = 1 
+
+root_servers = {}
+root_servers["."]="172.17.0.1"
+
+# add here authorative entries
+#upstream_servers = {}
+#upstream_servers["."]="127.0.0.2" 
+
+# Who is allowed to use the cache.  This line
+# allows anyone with "127.0" as the first two
+# digits of their IP to use Deadwood
+recursive_acl = "0.0.0.0/0"
+
+maradns_uid = 99 # UID Deadwood runs as
+maradns_gid = 99 # GID Deadwood runs as
+
+maximum_cache_elements = 60000
+
+# If you want to read and write the cache from disk, 
+# make sure chroot_dir above is readable and writable 
+# by the maradns_uid/gid above, and uncomment the 
+# following line. 
+cache_file = "dw_cache"
+
+# If your upstream DNS server converts "not there" DNS replies
+# in to IPs, this parameter allows Deadwood to convert any reply
+# with a given IP back in to a "not there" IP.  If any of the IPs
+# listed below are in a DNS answer, Deadwood converts the answer
+# in to a "not there"
+#ip_blacklist = "10.222.33.44, 10.222.3.55"
+
+# By default, for security reasons, Deadwood does not allow IPs in 
+# the 192.168.x.x, 172.[16-31].x.x, 10.x.x.x, 127.x.x.x, 
+# 169.254.x.x, 224.x.x.x, or 0.0.x.x range.  If using Deadwood 
+# to resolve names on an internal network, uncomment the 
+# following line:
+filter_rfc1918 = 0

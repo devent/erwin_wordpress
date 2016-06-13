@@ -5,17 +5,22 @@ MAINTAINER Erwin Mueller "erwin.mueller@nttdata.com"
 ENV MARADNS_VERSION 2.0.13
 ENV DEADWOOD_VERSION 3.2.09
 
+# maradns user
+RUN set -x \
+    && useradd -rU maradns
+
+# optional add proxy entries for apt
 RUN set -x \
     && [ -n \"${http_proxy}\" ] && echo Acquire::http::Proxy \"$http_proxy\"; >> /etc/apt/apt.conf.d/08proxy && true \
     && [ -n \"${ftp_proxy}\" ] && echo Acquire::ftp::Proxy \"$ftp_proxy\"; >> /etc/apt/apt.conf.d/08proxy && true
 
+# add tools
 RUN set -x \
     && apt-get update \
-    && apt-get install -y dnsutils net-tools \
+    && apt-get install -y dnsutils net-tools sed \
     && rm -rf /var/lib/apt/lists/*
 
 # supervisor installation
-# create directory for child images to store configuration in
 RUN set -x \
     && apt-get update \
     && apt-get install -y supervisor \
@@ -23,6 +28,14 @@ RUN set -x \
     && mkdir -p /etc/supervisor/conf.d \
     && rm -rf /var/lib/apt/lists/*
 
+# directories
+RUN set -x \
+    && mkdir -p /usr/local/bin \
+    && mkdir -p /usr/local/share/man/man1 \
+    && mkdir -p /usr/local/share/man/man5 \
+    && mkdir -p /usr/local/share/man/man8
+
+# install maradns
 RUN set -x \
     && apt-get update \
     && apt-get install -y \
@@ -36,13 +49,9 @@ RUN set -x \
     && wget http://maradns.samiam.org/download/2.0/$MARADNS_VERSION/maradns-${MARADNS_VERSION}.tar.bz2 \
     && wget http://maradns.samiam.org/download/2.0/${MARADNS_VERSION}/maradns-${MARADNS_VERSION}.tar.bz2.asc \
     && gpg --verify maradns-${MARADNS_VERSION}.tar.bz2.asc \
-    && useradd -rU maradns \
     && tar xjf maradns-${MARADNS_VERSION}.tar.bz2 \
     && cd /tmp/maradns-${MARADNS_VERSION} \
     && ./configure && make \
-    && mkdir -p /usr/local/share/man/man1 \
-    && mkdir -p /usr/local/share/man/man5 \
-    && mkdir -p /usr/local/share/man/man8 \
     && make install \
     && rm -rf /tmp/maradns-${MARADNS_VERSION} \
     && rm /tmp/maradns-${MARADNS_VERSION}.tar.bz2.asc \
@@ -50,6 +59,7 @@ RUN set -x \
     && apt-get remove --auto-remove -y build-essential \
     && rm -rf /var/lib/apt/lists/*
     
+# install deadwood
 RUN set -x \
     && apt-get update \
     && apt-get install -y \
@@ -67,8 +77,6 @@ RUN set -x \
     && cd /tmp/deadwood-${DEADWOOD_VERSION}/src \
     && make \
     && cd /tmp/deadwood-${DEADWOOD_VERSION} \
-    && mkdir -p /usr/local/bin \
-    && mkdir -p /usr/local/share/man/man1 \
     && cp src/Deadwood /usr/local/bin \
     && cp doc/Deadwood.1 /usr/local/share/man/man1 \
     && cd \
@@ -78,6 +86,7 @@ RUN set -x \
     && apt-get remove --auto-remove -y build-essential \
     && rm -rf /var/lib/apt/lists/*
 
+# deadwood cache directory
 RUN set -x \
     && mkdir -p /var/cache/deadwood \
     && chown maradns.maradns /var/cache/deadwood
@@ -89,13 +98,28 @@ ADD supervisor.conf /etc/supervisor.conf
 ADD maradns.sv.conf /etc/supervisor/conf.d/
 ADD deadwood.sv.conf /etc/supervisor/conf.d/
 
+# maradns configuration
+ADD mararc /etc/mararc.custom
 ADD mararc /etc/mararc
 
+# deadwood configuration
+ADD dwood3rc /etc/dwood3rc.custom
 ADD dwood3rc /etc/dwood3rc
 
+# maradns chroot directory
 VOLUME /etc/maradns
+
+# deadwood cache directory
 VOLUME /var/cache/deadwood
 
+# expose dns
 EXPOSE 53
 
+# add entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN set -x \
+    && chmod +x /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+
+# run supervisord
 CMD ["supervisord", "-c", "/etc/supervisor.conf"]
