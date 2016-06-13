@@ -113,7 +113,7 @@ VOLUME /etc/maradns
 VOLUME /var/cache/deadwood
 
 # expose dns
-EXPOSE 53
+EXPOSE 53/udp 53/tcp
 
 # add entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/

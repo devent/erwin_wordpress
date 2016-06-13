@@ -11,7 +11,7 @@ ADD dwood3rc /etc/dwood3rc.custom
 ADD dwood3rc /etc/dwood3rc
 
 # expose dns port
-EXPOSE 53
+EXPOSE 53/udp 53/tcp
 
 # add entrypoint script
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

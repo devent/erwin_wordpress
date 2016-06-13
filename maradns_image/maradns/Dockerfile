@@ -11,7 +11,7 @@ ADD mararc /etc/mararc.custom
 ADD mararc /etc/mararc
 
 # expose dns port
-EXPOSE 53
+EXPOSE 53/udp 53/tcp
 
 # add entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/
