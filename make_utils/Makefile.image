@@ -18,7 +18,7 @@ _build:
 	fi
 	
 _deploy: build
-	$(call check_defined, DOCKER_USER DOCKER_PASSWORD, docker repository login)
-	docker login -u $(DOCKER_USER) -p $(DOCKER_PASSWORD) && \
+	$(call check_defined, DOCKER_HUB_USER DOCKER_HUB_PASSWORD, docker repository login)
+	docker login -u $(DOCKER_HUB_USER) -p $(DOCKER_HUB_PASSWORD) && \
 	docker push $(REPOSITORY)/$(NAME):$(VERSION) && \
 	docker push $(REPOSITORY)/$(NAME):latest

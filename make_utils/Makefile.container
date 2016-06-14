@@ -1,5 +1,6 @@
 SHELL := /bin/bash
 WEAVE := /usr/local/bin/weave
+LOCAL_USER ?=
 .DEFAULT_GOAL := run
 .PHONY: _run _rerun _rm _clean _test _restart _localuser _dataContainer _rm_dataContainer
 
@@ -29,7 +30,8 @@ _restart: $(WEAVE) test
 	docker restart $(NAME)
 
 _localuser:
-	sudo useradd -rU maradns; true
+	$(call check_defined, LOCAL_USER, Service local user)
+	sudo useradd -rU $(LOCAL_USER); true
 
 $(WEAVE):
 	cd ../weave && $(MAKE)
@@ -49,5 +51,8 @@ _rm_dataContainer:
 	$(call check_defined, MOUNT_PATH, Mount path of data container)
 	if [ -n "$(data_container_run)" ]; then \
 	eval "$$(weave env)"; \
-	docker rm -f $(data_container_name); \
+	sudo docker rm -f $(data_container_name); \
 	fi
+
+_testDataContainer:
+	[ -n "$(data_container_run)" ]

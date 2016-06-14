@@ -1,13 +1,21 @@
 WEAVE := /usr/local/bin/weave
+.DEFAULT_GOAL := run
 .PHONY: run clean
 
-run: $(WEAVE)
-	$(WEAVE) launch
+include ../make_utils/Makefile.help
 
-stop:
+run: $(WEAVE) ##@default Installs and starts the weave network.
+	if ! $(WEAVE) status; then \
+	$(WEAVE) launch; \
+	fi
+
+test: $(WEAVE) ##@targets Tests if the weave network is active.
+	$(WEAVE) status
+
+stop: test ##@targets Stops the weave network.
 	$(WEAVE) stop
 
-clean: stop
+clean: stop ##@targets Stops and removes the weave network.
 	sudo rm $(WEAVE)
 
 $(WEAVE):

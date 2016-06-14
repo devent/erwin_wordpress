@@ -4,23 +4,33 @@ CONVOY_SPEC := /etc/docker/plugins/convoy.spec
 SERVICE := /etc/systemd/system/convoy.service
 DATA_VOL := /volumes/data.vol
 METADATA_VOL := /volumes/metadata.vol
+.DEFAULT_GOAL := install
 .PHONY: install clean
 
-install: $(CONVOY) $(SERVICE) enable start
+include ../make_utils/Makefile.help
 
-clean:
+install: $(CONVOY) $(SERVICE) enable start ##@default Installs, setups and starts convoy.
+
+clean: ##@target Stops and removes convoy.
 	sudo rm $(CONVOY); true
 	sudo rm $(CONVOY_SPEC); true
 	sudo systemctl stop convoy.service; true
 	sudo systemctl disable convoy.service; true
 	sudo rm $(SERVICE); true
 
-enable: $(SERVICE)
+enable: $(SERVICE) ##@target Enables convoy.
 	sudo systemctl enable convoy.service
-	
-start: $(DATA_VOL) $(METADATA_VOL)
-	sudo losetup /dev/loop5 $(DATA_VOL)
-	sudo losetup /dev/loop6 $(METADATA_VOL)
+
+check_data_vol = `sudo losetup | grep $(DATA_VOL)`
+check_metadata_vol = `sudo losetup | grep $(METADATA_VOL)`
+
+start: $(DATA_VOL) $(METADATA_VOL) ##@target Starts convoy.
+	if [ -z "$(check_data_vol)" ]; then \
+	sudo losetup /dev/loop5 $(DATA_VOL); \
+	fi
+	if [ -z "$(check_metadata_vol)" ]; then \
+	sudo losetup /dev/loop6 $(METADATA_VOL); \
+	fi
 	sudo systemctl start convoy.service
 	sudo systemctl status convoy.service
 	
