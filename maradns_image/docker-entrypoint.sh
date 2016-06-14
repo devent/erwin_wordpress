@@ -1,4 +1,10 @@
 #!/bin/bash
+set -eo pipefail
+
+# if command starts with an option, prepend supervisord
+if [ "${1:0:1}" = '-' ]; then
+    set -- supervisord "$@"
+fi
 
 # Add local user;
 # Either use the MARADNS_USER_ID if passed in at runtime or fallback.
@@ -24,5 +30,5 @@ sed -i -r "s/(maradns_gid\s*=\s*)([0-9]+)(.*)/\1${MARADNS_GID}\3/" /etc/dwood3rc
 # copy filebeat configuration
 cp /etc/filebeat/filebeat.yml.custom /etc/filebeat/filebeat.yml
 
-# run supervisord
-exec supervisord -c /etc/supervisor.conf
+# run command
+exec "$@"

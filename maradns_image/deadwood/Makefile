@@ -1,10 +1,10 @@
 REPOSITORY := erwinnttdata
 NAME := deadwood
-VERSION ?= 3.2.09-build_006
+VERSION ?= 3.2.09-build_007
 
-build: _build ##@target Builds the docker image.
+build: _build ##@targets Builds the docker image.
 
-deploy: _deploy ##@target Deployes the docker image to the repository.
+deploy: _deploy ##@targets Deployes the docker image to the repository.
 
 include ../../make_utils/Makefile.help
 include ../../make_utils/Makefile.functions

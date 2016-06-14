@@ -29,15 +29,15 @@ include ../make_utils/Makefile.container
 
 run: $(CONF) _localuser _run ##@default Starts the container. Set the option PORT_ON_LOCALHOST='-p 127.0.0.1:53:53/udp' to use the DNS server on localhost.
 
-rerun: _rerun ##@target Stops and starts the container.
+rerun: _rerun ##@targets Stops and starts the container.
 
-rm: _rm ##@target Stops and removes the container.
+rm: _rm ##@targets Stops and removes the container.
 
-clean: _clean ##@target Stops and removes the container and removes all created files.
+clean: _clean ##@targets Stops and removes the container and removes all created files.
 
-test: _test ##@target Tests if the container is running.
+test: _test ##@targets Tests if the container is running.
 	
-restart: _restart ##@target Restarts the container.
+restart: _restart ##@targets Restarts the container.
 
 $(CONF):
 	mkdir -p "$(CONF)"
