@@ -7,6 +7,7 @@ $(call check_defined, NAME, docker image name)
 $(call check_defined, VERSION, docker image name)
 
 _build:
+	$(call check_defined, VERSION, Image version)
 	if [ -z "`docker images | egrep '$(REPOSITORY)/$(NAME)\s*$(VERSION)'`" ]; then \
 	docker build \
 	--build-arg https_proxy=$$HTTPS_PROXY --build-arg http_proxy=$$HTTP_PROXY \
@@ -18,7 +19,8 @@ _build:
 	fi
 	
 _deploy: build
-	$(call check_defined, DOCKER_HUB_USER DOCKER_HUB_PASSWORD, docker repository login)
+	$(call check_defined, VERSION, Image version)
+	$(call check_defined, DOCKER_HUB_USER DOCKER_HUB_PASSWORD, Docker repository login)
 	docker login -u $(DOCKER_HUB_USER) -p $(DOCKER_HUB_PASSWORD) && \
 	docker push $(REPOSITORY)/$(NAME):$(VERSION) && \
 	docker push $(REPOSITORY)/$(NAME):latest
