@@ -4,8 +4,10 @@ set -x
 # Add local user;
 # Either use the MYSQL_USER_ID if passed in at runtime or fallback.
 USER_ID=${MYSQL_USER_ID:-9001}
-echo "Starting with UID : $USER_ID"
+GROUP_ID=${MYSQL_GROUP_ID:-9001}
+echo "Starting with UID: $USER_ID GID: $GROUP_ID"
 usermod -u $USER_ID mysql
+groupmod -g $GROUP_ID mysql
 
 # update permissions
 chown -R mysql:mysql /var/lib/mysql /var/run/mysqld

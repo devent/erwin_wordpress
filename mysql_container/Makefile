@@ -17,6 +17,7 @@ docker run \
 -v "`realpath $(CONFIG)`:/etc/mysql/conf.d" \
 -e MYSQL_ROOT_PASSWORD="$(ROOT_PASSWORD)" \
 -e MYSQL_USER_ID=`id -u $(LOCAL_USER)` \
+-e MYSQL_GROUP_ID=`id -g $(LOCAL_USER)` \
 -d \
 $(IMAGE_NAME)
 endef
