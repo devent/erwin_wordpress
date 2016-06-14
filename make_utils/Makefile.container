@@ -2,7 +2,7 @@ SHELL := /bin/bash
 WEAVE := /usr/local/bin/weave
 LOCAL_USER ?=
 .DEFAULT_GOAL := run
-.PHONY: _run _rerun _rm _clean _test _restart _localuser _dataContainer _rm_dataContainer
+.PHONY: _run _rerun _rm _clean _test _restart _bash _localuser _dataContainer _rm_dataContainer
 
 container_run = `docker ps -a | egrep '^.*\s+$(NAME)$$'`
 
@@ -29,6 +29,9 @@ _restart: $(WEAVE) test
 	eval "$$(weave env)"; \
 	docker restart $(NAME)
 
+_bash:
+	docker exec -it $(NAME) bash
+	
 _localuser:
 	$(call check_defined, LOCAL_USER, Service local user)
 	sudo useradd -rU $(LOCAL_USER); true

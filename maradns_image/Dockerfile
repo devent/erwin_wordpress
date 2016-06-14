@@ -17,7 +17,7 @@ RUN set -x \
 # add tools
 RUN set -x \
     && apt-get update \
-    && apt-get install -y dnsutils net-tools sed \
+    && apt-get install -y dnsutils net-tools bsdmainutils sed \
     && rm -rf /var/lib/apt/lists/*
 
 # supervisor installation

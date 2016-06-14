@@ -25,7 +25,7 @@ include ../make_utils/Makefile.help
 include ../make_utils/Makefile.functions
 include ../make_utils/Makefile.container
 
-.PHONY +: run rerun rm clean test restart
+.PHONY +: run rerun rm clean test restart bash
 
 run: $(CONF) _localuser _run ##@default Starts the container. Set the option PORT_ON_LOCALHOST='-p 127.0.0.1:53:53/udp' to use the DNS server on localhost.
 
@@ -38,6 +38,8 @@ clean: _clean ##@targets Stops and removes the container and removes all created
 test: _test ##@targets Tests if the container is running.
 	
 restart: _restart ##@targets Restarts the container.
+
+bash: test _bash ##@targets Executes the bash inside the running container.
 
 $(CONF):
 	mkdir -p "$(CONF)"

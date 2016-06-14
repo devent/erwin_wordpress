@@ -24,9 +24,8 @@ sed -i -r "s/(maradns_uid\s*=\s*)([0-9]+)(.*)/\1${MARADNS_UID}\3/" /etc/mararc
 sed -i -r "s/(maradns_gid\s*=\s*)([0-9]+)(.*)/\1${MARADNS_GID}\3/" /etc/mararc
 
 # bind maradns on container host
-HOST_NAME=`hostname -f`
-HOST_ADDRESS=`grep $HOST_NAME /etc/hosts|cut -d " " -f1`
-sed -i -r "s/(ipv4_bind_addresses\s*=\s*)(.*)(.*)/\1\"${HOST_ADDRESS}\"\3/" /etc/mararc
+MARADNS_ADDRESS=`ifconfig eth0 | grep 'inet addr:' | cut -d ' ' -f12 | cut -d ':' -f2`
+sed -i -r "s/(ipv4_bind_addresses\s*=\s*)(.*)(.*)/\1\"${MARADNS_ADDRESS}\"\3/" /etc/mararc
 
 # copy filebeat configuration
 cp /etc/filebeat/filebeat.yml.custom /etc/filebeat/filebeat.yml
