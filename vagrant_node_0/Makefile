@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 NODE_PRIVATE_NETWORK ?= 192.168.33.10
-.PHONY: up provision destroy
+.PHONY: up provision clean update
 
 up:
 	if [ -z "`vagrant plugin list|grep 'vagrant-vbguest (0.11.0)'`" ]; then \
@@ -17,3 +17,6 @@ provision:
 
 clean:
 	vagrant destroy
+	
+update:
+	vagrant box update
