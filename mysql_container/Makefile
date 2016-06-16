@@ -67,7 +67,7 @@ drop: dropdb dropuser ##@database Removes the database and the user from the ser
 dropdb: test ##@database Removes a database from the server.
 	$(call check_defined, DB_NAME, Database name)
 	mysql=( mysql --protocol=socket -uroot -p"$(ROOT_PASSWORD)" ); \
-	docker exec $(NAME) bash -c "echo \"DROP DATABASE $(DB_NAME) ;\" | $${mysql[*]}"
+	docker exec $(NAME) bash -c "echo \"DROP DATABASE IF EXISTS $(DB_NAME) ;\" | $${mysql[*]}"
 
 dropuser: test ##@database Removes the user from the server.
 	$(call check_defined, DB_USER DB_HOST, Database user and host)
