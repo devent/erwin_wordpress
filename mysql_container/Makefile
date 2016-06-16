@@ -37,14 +37,14 @@ rm: _rm ##@targets Stops and removes the container.
 clean: _clean rm_dataContainer ##@targets Stops and removes the container and removes all created files.
 
 test: testDataContainer _test ##@targets Tests if the container is running.
-	
+
 restart: _restart ##@targets Restarts the container.
 
 dataContainer: _dataContainer ##@targets Creates the data container.
 
 rm_dataContainer: _rm_dataContainer ##@targets Removes the data container.
 
-testDataContainer: _testDataContainer
+testDataContainer: _testDataContainer ##@targets Tests that the data container is available.
 
 connect: test ##@database Launch the mysql client for the database server.
 	mysql=( mysql --protocol=socket -uroot -p"$(ROOT_PASSWORD)" ); \
