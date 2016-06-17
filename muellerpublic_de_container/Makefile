@@ -13,7 +13,7 @@ DB_NAME := wp_muellerpublic
 define DOCKER_CMD :=
 docker run \
 --name $(NAME) \
---dns=172.17.0.1 \
+--dns=172.17.0.3 \
 --volumes-from $(DATA_VOLUME_NAME) \
 -e WORDPRESS_DB_HOST=$(DB_HOST) \
 -e WORDPRESS_DB_USER=$(DB_USER) \
