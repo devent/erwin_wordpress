@@ -1,6 +1,6 @@
 REPOSITORY := erwinnttdata
-NAME := wp_muellerpublic_de_data
-VERSION ?= 1.0-build_003
+NAME := wp_muellerpublic_data
+VERSION ?= 1.0-build_001
 
 build: _build ##@targets Builds the docker image.
 

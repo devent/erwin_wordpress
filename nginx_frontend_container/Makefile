@@ -1,14 +1,12 @@
 VERSION := 1.11
-NAME := nginx-backend
+NAME := nginx-frontend
 CONF := nginx.conf
 SITES := sites
-DATA_VOLUME_NAME := wp_muellerpublic_data
 
 define DOCKER_CMD :=
 docker run \
 --name $(NAME) \
 --dns=172.17.0.3 \
---volumes-from $(DATA_VOLUME_NAME) \
 -v "`realpath $(CONF)`:/etc/nginx/nginx.conf:ro" \
 -v "`realpath $(SITES)`:/etc/nginx/sites-enabled:ro" \
 -p 80:80 \

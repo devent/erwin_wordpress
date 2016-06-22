@@ -1,7 +1,7 @@
 VERSION := latest
 NAME := maradns-deadwood
-CONF := ../root/etc/maradns
-CACHE := ../root/var/cache/deadwood
+CONF := ./maradns
+CACHE := ./deadwood
 LOCAL_USER ?= maradns
 # Set the option PORT_ON_LOCALHOST to '-p 127.0.0.1:53:53/udp' to use the DNS server on localhost.
 PORT_ON_LOCALHOST ?=

@@ -5,7 +5,7 @@ ROOT_PASSWORD ?= auHoh5fei4biSooyobae1ahp8Xi1iaGo
 VOL_NAME := vol1
 MOUNT_PATH := var/lib/mysql
 IMAGE_NAME := erwinnttdata/mysql:$(VERSION)
-DATA_VOLUME_NAME := $(subst /,_,$(MOUNT_PATH))
+DATA_VOLUME_NAME := db_data
 LOCAL_USER ?= mysql
 
 define DOCKER_CMD :=
