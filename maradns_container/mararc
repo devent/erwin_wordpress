@@ -11,4 +11,4 @@ max_total = 20
 verbose_level = 0
 
 csv2 = {}
-csv2["wordpress.muellerpublic.nttdata.com.test."] = "db.wordpress.muellerpublic.nttdata.com.test"
+csv2["muellerpublic.nttdata.com.test."] = "db.muellerpublic.nttdata.com.test"

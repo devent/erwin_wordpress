@@ -1,5 +1,4 @@
 FROM wordpress:4.5-fpm
-
 MAINTAINER Erwin Mueller "erwin.mueller@nttdata.com"
 
 # save parent's entrypoint script

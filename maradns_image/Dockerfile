@@ -18,6 +18,7 @@ RUN set -x \
 RUN set -x \
     && apt-get update \
     && apt-get install -y dnsutils net-tools bsdmainutils sed \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # supervisor installation
@@ -26,6 +27,7 @@ RUN set -x \
     && apt-get install -y supervisor \
     && mkdir -p /var/log/supervisor \
     && mkdir -p /etc/supervisor/conf.d \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # directories
@@ -57,6 +59,7 @@ RUN set -x \
     && rm /tmp/maradns-${MARADNS_VERSION}.tar.bz2.asc \
     && rm /tmp/maradns-${MARADNS_VERSION}.tar.bz2 \
     && apt-get remove --auto-remove -y build-essential \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
     
 # install deadwood
@@ -84,6 +87,7 @@ RUN set -x \
     && rm /tmp/deadwood-${DEADWOOD_VERSION}.tar.bz2.asc \
     && rm /tmp/deadwood-${DEADWOOD_VERSION}.tar.bz2 \
     && apt-get remove --auto-remove -y build-essential \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # deadwood cache directory

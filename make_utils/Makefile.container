@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 WEAVE := /usr/local/bin/weave
-LOCAL_USER ?=
+CONTAINER_USER ?=
 .DEFAULT_GOAL := run
 .PHONY: _run _rerun _rm _clean _test _restart _bash _localuser _dataContainer _rm_dataContainer
 

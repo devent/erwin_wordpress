@@ -1,5 +1,7 @@
 #!/bin/bash
-set -x
+
+# Support for stopping container with `Ctrl+C`
+set -ex
 
 # if command starts with an option, prepend run command
 RUN_COMMAND=php-fpm
@@ -12,8 +14,8 @@ fi
 # - WORDPRESS_USER_ID and
 # - WORDPRESS_GROUP_ID
 # if passed in at runtime or fallback.
-USER_ID={WORDPRESS_USER_ID:-9001}
-GROUP_ID={WORDPRESS_GROUP_ID:-9001}
+USER_ID=${WORDPRESS_USER_ID:-9001}
+GROUP_ID=${WORDPRESS_GROUP_ID:-9001}
 echo "Starting with UID and GID: $USER_ID:$GROUP_ID"
 usermod -u $USER_ID www-data
 groupmod -g $GROUP_ID www-data

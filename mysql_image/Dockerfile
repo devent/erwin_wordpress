@@ -1,5 +1,4 @@
 FROM mysql:5.7
-
 MAINTAINER Erwin Mueller "erwin.mueller@nttdata.com"
 
 # copy configuration
