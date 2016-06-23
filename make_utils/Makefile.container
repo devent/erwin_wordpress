@@ -4,10 +4,10 @@ LOCAL_USER ?=
 .DEFAULT_GOAL := run
 .PHONY: _run _rerun _rm _clean _test _restart _bash _localuser _dataContainer _rm_dataContainer
 
-container_run = `docker ps -a | egrep '^.*\s+$(NAME)$$'`
+container_run = docker ps -a | egrep '^.*\s+$(NAME)$$'
 
 _run: $(WEAVE)
-	if [ -z "$(container_run)" ]; then \
+	if ! $(container_run); then \
 	eval "$$(weave env)"; \
 	$(DOCKER_CMD); \
 	fi
@@ -15,13 +15,13 @@ _run: $(WEAVE)
 _rerun: rm run
 
 _rm:
-	if [ -n "$(container_run)" ]; then \
+	if $(container_run); then \
 	eval "$$(weave env)"; \
 	docker rm -f $(NAME); \
 	fi
 
 _stop:
-	if [ -n "$(container_run)" ]; then \
+	if $(container_run); then \
 	eval "$$(weave env)"; \
 	docker stop $(NAME); \
 	fi
@@ -29,7 +29,7 @@ _stop:
 _clean: rm
 
 _test:
-	[ -n "$(container_run)" ]
+	[ -n "`$(container_run)`" ]
 	
 _restart: $(WEAVE) test
 	eval "$$(weave env)"; \

@@ -10,6 +10,9 @@ docker run \
 --dns=172.17.0.3 \
 --volumes-from $(DATA_VOLUME_NAME) \
 -v "`realpath $(CONF)`:/etc/nginx/nginx.conf:ro" \
+-v "`realpath nginx/wordpress_general.conf`:/etc/nginx/wordpress_general.conf:ro" \
+-v "`realpath nginx/wordpress_restrictions.conf`:/etc/nginx/wordpress_restrictions.conf:ro" \
+-v "`realpath nginx/wordpress_wp_super_cache.conf`:/etc/nginx/wordpress_wp_super_cache.conf:ro" \
 -v "`realpath $(SITES)`:/etc/nginx/sites-enabled:ro" \
 -d \
 nginx:$(VERSION)
