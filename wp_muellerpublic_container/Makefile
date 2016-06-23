@@ -1,4 +1,4 @@
-VERSION := 4.5-fpm
+VERSION := latest
 IMAGE_NAME := erwinnttdata/wp_muellerpublic_data:latest
 DOMAIN := wordpress.muellerpublic.nttdata.com
 NAME := wp_muellerpublic
@@ -21,28 +21,30 @@ docker run \
 -e WORDPRESS_DB_NAME=$(DB_NAME) \
 -e WORDPRESS_TABLE_PREFIX="wp_" \
 -d \
-wordpress:$(VERSION)
+erwinnttdata/wordpress:$(VERSION)
 endef
 
 include ../make_utils/Makefile.help
 include ../make_utils/Makefile.functions
 include ../make_utils/Makefile.container
 
-.PHONY +: run rerun rm clean test restart bash
+.PHONY +: run rerun stop rm clean test restart bash
 .PHONY +: dataContainer rm_dataContainer testDataContainer
-.PHONY +: backend backend-rerun backend-rm backend-clean backend-test backend-restart backend-bash
+.PHONY +: backend backend-rerun backend-stop backend-rm backend-clean backend-test backend-restart backend-bash
 
-run: dataContainer _run backend ##@default Starts the container.
+run: image-build dataContainer _run backend ##@default Starts the container.
 
-rerun: _rerun backend-rerun ##@targets Stops and starts the container.
+rerun: rm image-clean image-build run ##@targets Stops, removes and re-starts the container.
+
+stop: backend-stop _stop ##@targets Stops the container.
 
 rm: _rm backend-rm ##@targets Stops and removes the container.
 
-clean: _clean backend-clean rm_dataContainer ##@targets Stops and removes the container and removes all created files.
+clean: _clean backend-clean rm_dataContainer image-clean ##@targets Stops and removes the container and removes all created files.
 
 test: testDataContainer backend-test _test ##@targets Tests if the container is running.
 
-restart: backend-restart _restart backend-restart ##@targets Restarts the container.
+restart: _restart backend-restart ##@targets Restarts the container.
 
 bash: test _bash ##@targets Executes the bash inside the running container.
 
@@ -57,6 +59,9 @@ backend:
 
 backend-rerun:
 	$(MAKE) -f Makefile.nginx rerun
+
+backend-stop:
+	$(MAKE) -f Makefile.nginx stop
 
 backend-rm:
 	$(MAKE) -f Makefile.nginx rm
@@ -73,5 +78,11 @@ backend-restart:
 backend-bash:
 	$(MAKE) -f Makefile.nginx bash
 
-build:
+image-build:
 	$(MAKE) -f Makefile.image build
+
+image-clean:
+	$(MAKE) -f Makefile.image clean
+
+image-deploy:
+	$(MAKE) -f Makefile.image deploy

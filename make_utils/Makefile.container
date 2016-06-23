@@ -20,6 +20,12 @@ _rm:
 	docker rm -f $(NAME); \
 	fi
 
+_stop:
+	if [ -n "$(container_run)" ]; then \
+	eval "$$(weave env)"; \
+	docker stop $(NAME); \
+	fi
+
 _clean: rm
 
 _test:
@@ -32,9 +38,9 @@ _restart: $(WEAVE) test
 _bash:
 	docker exec -it $(NAME) bash
 	
-_localuser:
-	$(call check_defined, LOCAL_USER, Service local user)
-	sudo useradd -rU $(LOCAL_USER); true
+_containeruser:
+	$(call check_defined, CONTAINER_USER, The local user of the run container)
+	sudo useradd -rU $(CONTAINER_USER); true
 
 $(WEAVE):
 	cd ../weave && $(MAKE)

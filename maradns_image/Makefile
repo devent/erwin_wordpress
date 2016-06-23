@@ -9,6 +9,8 @@ build: _build ##@targets Builds the docker image.
 	cd maradns && $(MAKE) build BUILD=$(BUILD)
 	cd deadwood && $(MAKE) build BUILD=$(BUILD)
 
+clean: _clean ##@targets Removes the local docker image.
+
 deploy:
 	$(call check_defined, BUILD, Build number)
 deploy: _deploy ##@targets Deployes the docker image to the repository.
